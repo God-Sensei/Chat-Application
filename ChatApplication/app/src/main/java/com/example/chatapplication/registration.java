@@ -1,8 +1,9 @@
 package com.example.chatapplication;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,9 +26,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+
 public class registration extends AppCompatActivity {
     TextView loginbut;
-    EditText rg_username, rg_email , rg_password, rg_repassword;
+    EditText rg_username, rg_email, rg_password, rg_repassword;
     Button rg_signup;
     CircleImageView rg_profileImg;
     FirebaseAuth auth;
@@ -36,15 +39,12 @@ public class registration extends AppCompatActivity {
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     FirebaseDatabase database;
     FirebaseStorage storage;
-    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Establishing The Account");
-        progressDialog.setCancelable(false);
         getSupportActionBar().hide();
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -56,7 +56,6 @@ public class registration extends AppCompatActivity {
         rg_repassword = findViewById(R.id.rgrepassword);
         rg_profileImg = findViewById(R.id.profilerg0);
         rg_signup = findViewById(R.id.signupbutton);
-
 
         loginbut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,35 +73,31 @@ public class registration extends AppCompatActivity {
                 String emaill = rg_email.getText().toString();
                 String Password = rg_password.getText().toString();
                 String cPassword = rg_repassword.getText().toString();
-                String status = "Hey I'm Using This Application";
+                String status = "hey i'm using this application";
 
-                if (TextUtils.isEmpty(namee) || TextUtils.isEmpty(emaill) ||
-                        TextUtils.isEmpty(Password) || TextUtils.isEmpty(cPassword)){
-                    progressDialog.dismiss();
+                if (TextUtils.isEmpty(namee) || TextUtils.isEmpty(emaill)||
+                        TextUtils.isEmpty(Password)||TextUtils.isEmpty(cPassword)){
                     Toast.makeText(registration.this, "Please Enter Valid Information", Toast.LENGTH_SHORT).show();
-                }else  if (!emaill.matches(emailPattern)){
-                    progressDialog.dismiss();
-                    rg_email.setError("Type A Valid Email Here");
+                }else if (!emaill.matches(emailPattern)){
+                    rg_email.setError("Type a Valid Email Here");
                 }else if (Password.length()<6){
-                    progressDialog.dismiss();
-                    rg_password.setError("Password Must Be 6 Characters Or More");
+                    rg_password.setError("Password Must Be Six Characters Or More");
                 }else if (!Password.equals(cPassword)){
-                    progressDialog.dismiss();
-                    rg_password.setError("The Password Doesn't Match");
+                    rg_repassword.setError("The Password Does'nt Match");
                 }else {
                     auth.createUserWithEmailAndPassword(emaill,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                String id = task.getResult().getUser().getUid();
-                                DatabaseReference reference = database.getReference().child("user").child(id);
-                                StorageReference storageReference = storage.getReference().child("Upload").child(id);
+                            if (task.isSuccessful()) {
+                                String id= task.getResult().getUser().getUid();
+                                DatabaseReference reference = database.getReference().child("user").child("id");
+                                StorageReference storageReference = storage.getReference().child("Upload").child("id");
 
-                                if (imageURI!=null){
+                                if(imageURI!=null){
                                     storageReference.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                            if (task.isSuccessful()){
+                                            if(task.isSuccessful()){
                                                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
@@ -111,14 +106,14 @@ public class registration extends AppCompatActivity {
                                                         reference.setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()){
-                                                                    progressDialog.show();
+                                                                if(task.isSuccessful()){
                                                                     Intent intent = new Intent(registration.this,MainActivity.class);
                                                                     startActivity(intent);
                                                                     finish();
                                                                 }else {
-                                                                    Toast.makeText(registration.this, "Error in creating the user", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(registration.this, "Error In Creating The User", Toast.LENGTH_SHORT).show();
                                                                 }
+
                                                             }
                                                         });
                                                     }
@@ -126,31 +121,29 @@ public class registration extends AppCompatActivity {
                                             }
                                         }
                                     });
-                                }else {
-                                    String status = "Hey I'm Using This Application";
-                                    imageuri = "https://firebasestorage.googleapis.com/v0/b/av-messenger-dc8f3.appspot.com/o/man.png?alt=media&token=880f431d-9344-45e7-afe4-c2cafe8a5257";
+                                }else{
+                                    String status= "Hey i'M Using This Apllication";
+                                    imageuri = "https://firebasestorage.googleapis.com/v0/b/chat-application-74201.appspot.com/o/man.png?alt=media&token=d83a924e-1442-48f2-a431-954e4e909bef";
                                     Users users = new Users(id,namee,emaill,Password,imageuri,status);
                                     reference.setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
-                                                progressDialog.show();
+                                            if(task.isSuccessful()){
                                                 Intent intent = new Intent(registration.this,MainActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                             }else {
-                                                Toast.makeText(registration.this, "Error in creating the user", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(registration.this, "Error In Creating The User", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
                                 }
-                            }else {
+                            }else{
                                 Toast.makeText(registration.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
-
             }
         });
 
@@ -162,6 +155,7 @@ public class registration extends AppCompatActivity {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,"Select Picture"),10);
+
             }
         });
     }
@@ -169,9 +163,9 @@ public class registration extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==10){
-            if (data!=null){
-                imageURI = data.getData();
+        if(requestCode ==10){
+            if(data!=null){
+                imageURI= data.getData();
                 rg_profileImg.setImageURI(imageURI);
             }
         }

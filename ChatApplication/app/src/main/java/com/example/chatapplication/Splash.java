@@ -29,7 +29,7 @@ public class Splash extends AppCompatActivity {
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
 
         logo.setAnimation(topAnim);
-        name.setAnimation(topAnim);
+        name.setAnimation(bottomAnim);
         own1.setAnimation(bottomAnim);
 
         new Handler().postDelayed(new Runnable() {

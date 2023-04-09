@@ -1,9 +1,18 @@
 package com.example.chatapplication;
 
 public class Users {
-        String profilepic,mail,userName,password,userId,lastMessage,status;
+    String profilepic,mail,userName,password,userId,lastMessage,status;
 
-    public Users(){}
+    public  Users (){}
+
+    public Users(String userId, String userName, String maill, String password, String profilepic, String status){
+        this.userId = userId;
+        this.userName = userName;
+        this.mail = maill;
+        this.password= password;
+        this.profilepic = profilepic;
+        this.status = status;
+    }
 
     public String getProfilepic() {
         return profilepic;
